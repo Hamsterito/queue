@@ -1,6 +1,6 @@
 # queue
 
-#Website for online queue where admin can accept students, and where students can queue live or electronically (in advance via bot).
+Website for online queue where admin can accept students, and where students can queue live or electronically (in advance via bot).
 
 Two sites for admins(web version only) and users(mobile version only)
 Launching mobile and web versions

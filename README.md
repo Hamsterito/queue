@@ -61,3 +61,13 @@ pip install Flask
 pip install psycopg2
 
 pip install telebot
+
+![photo_5413538670536945106_y](https://github.com/user-attachments/assets/390a8f87-ee9e-4533-a93a-45ef471f246f)
+![photo_5413538670536945116_y](https://github.com/user-attachments/assets/b651c244-dddd-43d0-8a4c-1d146dc49bf7)
+![photo_5413538670536945115_y](https://github.com/user-attachments/assets/6387e01d-03c9-454c-8ce3-de40a0b4e868)
+![photo_5310192536100399758_y](https://github.com/user-attachments/assets/0dad0c04-f56f-497c-8280-b335d7d6cac1)
+![photo_5411313486635595454_y](https://github.com/user-attachments/assets/a95140c9-bae7-4058-a7d8-3481ca73ff5f)
+![photo_5411313486635595455_y](https://github.com/user-attachments/assets/c09f8cc3-9450-4e63-b12c-08ebdc68b134)
+![photo_5411313486635595456_y](https://github.com/user-attachments/assets/03f93a80-747c-49f3-a947-816b17d51353)
+![photo_5411313486635595453_y](https://github.com/user-attachments/assets/d30525e8-8eb9-4296-a3a7-9dd90b8bc397)
+![photo_5411313486635595454_y (1)](https://github.com/user-attachments/assets/c1ecea1a-dc2b-4b65-9b77-7cda8b7b285a)

@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/menu.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/manage_table.css') }}">
+    <script src="{{ url_for('static', filename='js/menu.js') }}" defer></script>
+    <title>Система Очереди</title>
+    <style>
+
+    /* базовые настройки */
+    body1 {
+        font-family: 'Arial', sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f4f4f9;
+        color: #333;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        text-align: center;
+    }
+
+    .logo {
+        max-height: 50px;
+    }
+
+    .menu ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        gap: 20px;
+        padding-left: 165px;
+    }
+
+    .menu ul li a {
+        color: white;
+        text-decoration: none;
+        font-size: 16px;
+        padding: 8px 12px;
+        border-radius: 4px;
+        transition: background-color 0.3s;
+    }
+
+    .menu ul li a:hover {
+        background-color: #3b5bdb;
+    }
+
+    /* дата и время */
+    #date-time {
+        text-align: right;
+    }
+
+    #current-time,
+    #current-date {
+        font-size: 14px;
+    }
+
+    /* кнопки */
+    button {
+        font-size: 16px;
+        padding: 10px 20px;
+        margin: 15px 0;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        width: 300px; 
+        height: 49px; 
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+    }
+
+    button.btn-success {
+        background-color: #ffffff;
+        border: 2px solid #228be6;
+        color: #339af0;
+    }
+
+    button.btn-success:hover {
+        background-color: #2374B1;
+        color: #ffffff;
+    }
+
+    button.btn-primary {
+        background-color: #339af0;
+        color: white;
+
+    }
+
+    button.btn-primary:hover {
+        background-color: #124b76;
+    }
+
+    button.btn-warning {
+        background-color: #339af0;
+        color: white;
+        width: 334px;
+
+    }
+
+    button.btn-warning:hover {
+        background-color: #124b76;
+    }
+
+    button.btn-danger {
+        background-color: #fff;
+        border: 2px solid #D63535;
+        color: #D63535;
+        width: 334px;
+
+    }
+
+    button.btn-danger:hover {
+        background-color: #D63535;
+        color: #ffffff;
+    }
+
+    /* контент */
+    main {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 20px; /* пространство между секциями */
+        padding: 20px;
+    }
+
+    h2, h3, p {
+        margin: 10px 0;
+    }
+
+
+    /* Стили для модального окна */
+    .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        justify-content: center;
+        align-items: center;
+    }
+
+    .modal-content {
+        background-color: white;
+        padding: 20px;
+        border-radius: 10px;
+        width: 300px;
+        text-align: center;
+    }
+
+    .modal-content button {
+        margin: 10px;
+    }
+
+
+    .status-card {
+            background-color: #f0f0f0; /* светло-серый цвет для фона */
+            border: 1px solid #ccc; /* рамка */
+            border-radius: 8px; /* закругленные углы */
+            padding: 16px; /* внутренний отступ */
+            max-width: 300px; /* ограничение ширины */
+            margin: 20px auto; /* центрирование по горизонтали */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* легкая тень */
+            justify-content: center; /* Центрирует по горизонтали */
+        }
+
+
+        .return-button {
+            width: 334px;
+            height: 40px;
+            background-color: #D4D4D4;
+            color: #2F2F2F;
+            padding: 4px 18px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 12px;
+            border: none;
+            cursor: pointer;
+        }
+
+
+        .status-card h2 {
+            margin: 0 0 10px; /* отступы */
+            color: #333; /* цвет текста */
+            text-align: center;
+        }
+        .status-card h3 {
+            margin: 0 0 10px;
+            color: #555;
+            text-align: center;
+        }
+        .status-card p {
+            margin: 0 0 20px;
+            color: #666;
+            text-align: center;
+        }
+
+        .return-button {
+            display: inline-block;
+            width: 300px;
+            height: 40px;
+            background-color: #D4D4D4;
+            color: #2F2F2F;
+            padding: 4px 18px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 12px;
+            border: none;
+            cursor: pointer;
+        }
+        .return-button:hover {
+            background-color: #535353;
+            color: #D4D4D4; 
+        }
+        /* Контейнер для таймера */
+        #timer-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 100%;
+            text-align: center;
+        }
+
+    </style>
+</head>
+<body>
+    <!-- menu -->
+    <header>
+        <div class="menu">
+            <img src="{{ url_for('static', filename='imaglogo/Aitulogo.svg') }}" alt="Логотип" class="logo">
+            <ul>
+                <li><a href="{{ url_for('statistics') }}">Статистика</a></li>
+                <li><a href="#" id="queue-button" onclick="redirectToTable()" disabled>Очередь</a></li>
+                {% if session['role'] == 'superadmin' %}
+                    <li id="editor-link"><a href="{{ url_for('admins') }}">Редактор</a></li>
+                {% endif %}
+                <li><a href="{{ url_for('logout') }}">Выйти</a></li>
+            </ul>
+            <div id="date-time">
+                <div id="current-time"></div>
+                <div id="current-date"></div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section>
+            <div class="status-card">
+                    <h2>{{ counter[1] }}</h2>
+                    {% if in_process %}
+                        <h3>Прием клиента {{ client[2] }}</h3>
+                        <p>Статус: {{ queue_type }}</p>
+                        <form method="POST">
+                            <button type="submit" name="end_acceptance" class="btn btn-success">Завершить прием</button>
+                        </form>
+                    {% else %}
+                        <h3>Готовы ли вы начать прием?</h3>
+                        <form method="POST">
+                            <button type="submit" name="start_acceptance" class="btn btn-primary">Начать прием</button>
+                        </form>
+                    {% endif %}
+            </div>   
+                
+            <div class="body">
+            {% if queue_type == "Онлайн очередь" %}
+                <!-- Таймер с отсчетом 5 минут -->
+                <div id="timer-container">
+                    <p>Оставшееся время: <span id="timer">05:00</span></p>
+                    <form method="POST" id="return-form" style="display:none;">
+                        <button type="submit" name="return_to_live_queue" class="btn btn-warning">Вернуть в живую очередь</button>
+                    </form>
+                </div>
+            {% endif %}
+
+            <form method="POST" class="mt-3">
+                <button type="button" id="call-out-of-turn-btn" class="btn btn-warning" onclick="showCallModal()">Вызвать вне очереди</button>
+            </form>
+
+            <form method="POST" class="mt-3">
+                <button type="button" id="delete-btn" class="btn btn-danger" onclick="showDeleteModal()">Удалить</button>
+            </form>
+
+            <form method="POST">
+                <button type="submit" name="exit" class="btn btn-danger">Освободить стол</button>
+            </form>
+            </div>
+        </section>
+    </main>
+
+    <!-- Модальное окно для вызова клиента вне очереди -->
+    <div id="call-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeCallModal()">&times;</span>
+            <h2>Вызвать клиента вне очереди</h2>
+
+            <form method="POST">
+                <div class="form-group">
+                    <label for="queue_id">Выберите клиента:</label>
+                    <select name="queue_id_to_call" id="queue_id" class="form-control">
+                        {% for client in waiting_clients %}
+                            <option value="{{ client[0] }}">Клиент {{ client[2] }} (Queue ID: {{ client[0] }})</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Вызвать клиента</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Модальное окно для удаления клиента -->
+    <div id="delete-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeDeleteModal()">&times;</span>
+            <h2>Список ожидающих клиентов:</h2>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Queue ID</th>
+                        <th>Номер клиента</th>
+                        <th>Статус</th>
+                        <th>Действия</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for client in waiting_clients %}
+                        <tr>
+                            <td>{{ client[0] }}</td>
+                            <td>{{ client[2] }}</td>
+                            <td>{{ client[3] }}</td>
+                            <td>
+                                <form method="POST" style="display:inline;">
+                                    <input type="hidden" name="delete_queue_id" value="{{ client[0] }}">
+                                    <button type="submit" class="btn btn-danger">Удалить</button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Стиль для модального окна -->
+    <style>
+        .modal {
+            display: none; /* Скрыто по умолчанию */
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 600px;
+        }
+
+        .close-btn {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close-btn:hover,
+        .close-btn:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
+
+      <!-- Скрипты для отображения текущего времени и таймера -->
+      <script>
+        // Таймер, отсчитывающий от 5 минут до 0
+        var timeLeft = 5 * 60; // 5 минут в секундах
+
+        function updateTimer() {
+            var minutes = Math.floor(timeLeft / 60);
+            var seconds = timeLeft % 60;
+            minutes = minutes < 10 ? '0' + minutes : minutes;
+            seconds = seconds < 10 ? '0' + seconds : seconds;
+            document.getElementById('timer').innerText = minutes + ":" + seconds;
+
+            if (timeLeft <= 0) {
+                clearInterval(timerInterval);
+                // Показываем кнопку "Вернуть в живую очередь"
+                document.getElementById('return-form').style.display = "block";
+            } else {
+                timeLeft--;
+            }
+        }
+
+        // Запуск таймера
+        var timerInterval = setInterval(updateTimer, 1000);
+
+        // Функция для обновления времени на странице
+        function updateCurrentTime() {
+            var now = new Date();
+            var hours = now.getHours().toString().padStart(2, '0');
+            var minutes = now.getMinutes().toString().padStart(2, '0');
+            var seconds = now.getSeconds().toString().padStart(2, '0');
+            var date = now.toLocaleDateString('ru-RU'); // форматирование даты по-русски
+            document.getElementById('current-time').innerText = hours + ':' + minutes + ':' + seconds;
+            document.getElementById('current-date').innerText = date;
+        }
+
+        // Обновление текущего времени каждую секунду
+        setInterval(updateCurrentTime, 1000);
+
+        // Функции для модальных окон
+        function showCallModal() {
+            document.getElementById("call-modal").style.display = "block";
+        }
+
+        function closeCallModal() {
+            document.getElementById("call-modal").style.display = "none";
+        }
+
+        function showDeleteModal() {
+            document.getElementById("delete-modal").style.display = "block";
+        }
+
+        function closeDeleteModal() {
+            document.getElementById("delete-modal").style.display = "none";
+        }
+
+        // Закрытие модального окна при клике за его пределами
+        window.onclick = function(event) {
+            var callModal = document.getElementById("call-modal");
+            var deleteModal = document.getElementById("delete-modal");
+            if (event.target == callModal) {
+                callModal.style.display = "none";
+            }
+            if (event.target == deleteModal) {
+                deleteModal.style.display = "none";
+            }
+        }
+    </script>
+</body>
+</html>

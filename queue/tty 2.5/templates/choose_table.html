@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Выбор стола</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/menu.css') }}">
+    <script src="{{ url_for('static', filename='js/menu.js') }}" defer></script>
+    <style>
+        /* Основной стиль для всего документа */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f7fc;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            text-align: center;
+            padding: 0 20px;
+        }
+
+        .title {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 30px;
+        }
+
+        h2 {
+            font-size: 22px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .col-4 {
+            flex: 1 0 calc(33% - 20px);
+            max-width: 300px;
+            margin: 10px 0;
+        }
+
+        /* Стиль кнопок */
+        .table-btn {
+            width: 100%;
+            padding: 15px 0;
+            background-color: #2893E5;
+            color: white;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            border: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column; /* Чтобы текст и статус располагались вертикально */
+        }
+
+        .table-btn:hover {
+            background-color: #2278a1;
+        }
+
+        .table-btn.disabled {
+            background-color: #aaa;
+            cursor: not-allowed;
+        }
+
+        /* Статус под кнопками */
+        .status {
+            margin-top: 5px; /* Уменьшен отступ между кнопкой и статусом */
+            font-size: 14px;
+        }
+
+        /* Цвет кнопки в зависимости от статуса */
+        .table-btn.free {
+            background-color: #2893E5;
+        }
+
+        .table-btn.busy {
+            background-color: #D63535;
+        }
+
+        .table-btn.free:hover {
+            background-color: #2893E5;
+        }
+
+        .table-btn.busy:hover {
+            background-color: #c94c4c;
+        }
+
+        /* Стиль текста статуса */
+        .status.free {
+            color: #5FD450; /* Зеленый для "Свободен" */
+        }
+
+        .status.busy {
+            color: #D63535; /* Красный для "Занят" */
+        }
+    </style>
+</head>
+<body>
+    <!-- Меню (не тронут) -->
+    <header>
+        <div class="menu">
+            <img src="{{ url_for('static', filename='imaglogo/Aitulogo.svg') }}" alt="Логотип" class="logo">
+            <ul>
+                <li><a href="{{ url_for('statistics') }}">Статистика</a></li>
+                <li><a href="#" id="queue-button" onclick="redirectToTable()" disabled>Очередь</a></li>
+                {% if session['role'] == 'superadmin' %}
+                    <li><a href="{{ url_for('admins') }}">Редактор</a></li>
+                {% endif %}
+                <li><a href="{{ url_for('logout') }}">Выйти</a></li>
+            </ul>
+            <div id="date-time">
+                <div id="current-time"></div>
+                <div id="current-date"></div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Контент страницы -->
+    <div class="container">
+        <div class="title">
+            Добро пожаловать, {{ admin_login }}! Роль: {{ role }}
+        </div>
+        <h2>Выберите стол для работы</h2>
+
+        <div class="row">
+            {% for counter in counters %}
+                <div class="col-4 mb-3">
+                    <form method="post">
+                        <button type="submit" name="counter_id" value="{{ counter[0] }}" 
+                                class="table-btn {% if counter[2] == True %}free{% else %}busy{% endif %}">
+                            Стол {{ counter[1] }}
+                        </button>
+                        <div class="status {% if counter[2] == True %}free{% else %}busy{% endif %}">
+                            {% if counter[2] == True %}
+                                Свободен
+                            {% else %}
+                                Занят
+                            {% endif %}
+                        </div>
+                    </form>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+</body>
+</html>

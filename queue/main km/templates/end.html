@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        .container {
+            box-sizing: border-box;
+            position: relative;
+            width: 100%;
+            height: 100%;
+            background: #FFFFFF;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            top: 150px;
+            font-family: 'Gotham Pro', sans-serif;
+        }
+
+        .circle {
+            width: 199px;
+            height: 73px;
+            margin-top: 50px;
+        }
+
+        .icon {
+            width: 36.667px;
+            height: 36.667px;
+            flex-shrink: 0;
+            position: absolute;
+            top: 95px;
+        }
+
+        .text {
+            width: 199px;
+            height: 13px;
+            font-style: normal;
+            font-weight: 400;
+            font-size: 14px;
+            line-height: 13px;
+            text-align: center;
+            color: #000000;
+            margin-top: 16px; 
+        }
+
+        
+        .button {
+            width: 243px;
+            height: 32px;
+            background: rgba(40, 147, 229, 1);
+            border-radius: 5px;
+            font-size: 12px;
+            line-height: 11px;
+            text-align: center;
+            color: #FFFFFF;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            margin-top: 30px;
+            opacity: 1;
+        }
+
+        .button:active {
+            background: rgba(35, 116, 177, 1);
+        }
+
+        @font-face {
+            font-family: 'Gotham Pro';
+            src: url('Шрифт-Gotham Pro/GothamPro-Regular.woff2') format('woff2'),
+                 url('Шрифт-Gotham Pro/GothamPro-Regular.woff') format('woff');
+            font-weight: 400;
+            font-style: normal;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img src="{{ url_for('static', filename='img/lucide_circle-check.png') }}" class="icon" alt="Иконка">
+        <div class="circle"></div>
+        <div class="text">Вы покинули очередь</div>
+        <div id="kkkbutton" class="button">Встать в очередь</div>
+    </div>
+    <script>
+        const button = document.getElementById("kkkbutton");
+        button.addEventListener("click", () => {
+            button.classList.toggle("active");
+            if (button.classList.contains("active")) {
+                setTimeout(() => {
+                    window.location.href = "{{ url_for('index') }}";
+                }, 1000);
+            }
+        });
+    </script>
+</body>
+</html>

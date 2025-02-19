@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Queue</title>
+    <style>
+     
+     body {
+            margin: 0;
+            font-family: 'Gotham Pro', sans-serif;
+            background: #FFFFFF;
+        } 
+        
+        .header-logo {
+            width: 100px;
+            height: 50px;
+            background: url("{{ url_for('static', filename='img/aitu.png') }}") no-repeat center/cover;
+            margin-bottom: 20px;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+        }
+        
+        /* Buttons */
+        .btn {
+            position: absolute;
+            width: 243px;
+            height: 32px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 5px;
+            text-align: center;
+            line-height: 32px;
+            font-size: 12px;
+            font-weight: 400;
+        }
+
+        .btn-notify {
+            top: 490px;
+            background: #2893E5;
+            color: #FFFFFF;
+            cursor: pointer;
+        }
+
+        .btn-notify:active {
+            background: rgba(35, 116, 177, 1);
+        }
+        
+
+        .btn-leave {
+            top: 540px;
+            background: #E8E8E8;
+            color: #2893E5;
+            cursor: pointer;
+        }
+
+        .btn-leave:active {
+            background: rgba(209, 209, 209, 1);
+        }
+        
+        /* Circles */
+        .circle {
+            position: absolute;
+            border-radius: 50%;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .circle-blue-light {
+            width: 254px;
+            height: 246px;
+            top: 186px;
+            background: rgba(103, 255, 232, 0.222);
+        }
+
+        .circle-blue {
+            width: 212px;
+            height: 212px;
+            top: 203px;
+            background: rgba(103, 255, 232, 1);
+        }
+
+        .circle-white {
+            width: 186px;
+            height: 186px;
+            top: 216px;
+            background: #FFFFFF;
+        }
+
+        /* Text */
+        .text {
+            text-align: center;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .queue-text {
+            font-size: 24px;
+            color: #000000;
+            top: 291px;
+            width: 199px;
+        }
+
+        .queue-number {
+            font-size: 12px;
+            color: #000000;
+            top: 265px;
+            width: 196px;
+        }
+
+
+        .sub-text {
+            font-size: 12px;
+            color: #000000;
+            top: 352px;
+            left: 50%;
+            width: 193px;
+            text-align: center;
+            position: absolute;
+            transform: translateX(-50%);
+        }
+
+
+
+        /* Overlay */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.37);
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .popup {
+            width: 80%; 
+            max-width: 320px; 
+            height: 110px;
+            right: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            gap: 0px;
+            border-radius: 15px;
+            opacity: 0px;
+            background: #FFFFFF;
+            position: absolute;
+            padding: 15px; 
+            text-align: center;
+        }
+
+        .popup-button {
+            width: 100%; 
+            height: 32px;
+            border-radius: 5px;
+            font-size: 12px;
+            line-height: 32px;
+            cursor: pointer;
+            margin: 5px 0; 
+            border: none;
+        }
+
+
+        .popup-confirm {
+            background: rgba(40, 147, 229, 1);
+            color: #FFFFFF;
+        }
+
+        .popup-confirm:active {
+            background: rgba(35, 116, 177, 1);
+        }
+
+        .popup-cancel {
+            background: rgba(232, 232, 232, 1);
+            color: #2893E5;
+        }
+
+        .popup-cancel:active {
+            background: rgba(209, 209, 209, 1);
+        } 
+                
+        @font-face {
+            font-family: 'Gotham Pro';
+            src: url('Шрифт-Gotham Pro/GothamPro-Regular.woff2') format('woff2'),
+                 url('Шрифт-Gotham Pro/GothamPro-Regular.woff') format('woff');
+            font-weight: 400;
+            font-style: normal;
+        }
+  
+    </style>
+</head>
+<body>
+    <div class="header-logo"></div>
+    <div class="queue-container">
+        <!-- Circles -->
+        <div class="circle circle-blue-light"></div>
+        <div class="circle circle-blue"></div>
+        <div class="circle circle-white"></div>
+
+        <!-- Text -->
+        <div class="text queue-number">Ваш номер #{{ queue_number }}</div>
+        <div class="text queue-text">Перед вами никого нет</div>
+        <div class="sub-text">-вас скоро вызовут</div>
+
+        <!-- Buttons -->
+        <div class="btn btn-notify" id="btn-notify">Включить уведомления</div>
+        <div class="btn btn-leave" id="btn-leave">Покинуть очередь</div>
+    </div>
+
+    <!-- Overlay -->
+    <div class="overlay" id="overlay">
+        <div class="popup">
+            <div style="font-size: 14px; font-weight: bold;">Вы уверены?</div>
+            <div style="font-size: 12px; color: #444;">Вы потеряете своё место в очереди</div>
+            <button class="popup-button popup-confirm" id="popup-confirm">Покинуть</button>
+            <button class="popup-button popup-cancel" id="popup-cancel">Отмена</button>
+        </div>        
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fetch/3.0.0/fetch.min.js"></script>
+    <script>
+        var queue_number = "{{ queue_number }}";
+
+        function updateQueueStatusPeriodically() {
+            fetch(`/new-data-status?queue_number=${queue_number}`)
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Актуальные данные о статусе:', data);
+                    redirectBasedOnStatus(data.status,data.people_in_front);
+                })
+                .catch(error => {
+                    console.error('Ошибка при получении данных о статусе:', error);
+                });
+        }
+
+        function redirectBasedOnStatus(status, people_in_front) {
+            const queueNumber = new URLSearchParams(window.location.search).get("queue_number");
+
+            fetch(`/new-data-status?queue_number=${queueNumber}`)
+                .then(response => {
+                    if (response.status === 404) {
+                        window.location.href = "/";
+                        return;
+                    }
+
+                    return response.json();
+                })
+                .then(data => {
+                    if (data) {
+                        if (data.status === 'ожидание' && data.people_in_front === 0) {
+                            if (window.location.pathname !== "/queue2") {
+                                setTimeout(() => {
+                                    window.location.href = `/queue2?queue_number=${queueNumber}`;
+                                }, 2000);
+                            }
+                        } else if (data.status === 'ожидание') {
+                            if (window.location.pathname !== "/queue1") {
+                                window.location.href = `/queue1?queue_number=${queueNumber}`;
+                            }
+                        } else if (data.status === 'процесс') {
+                            if (window.location.pathname !== "/queue3") {
+                                window.location.href = `/queue3?queue_number=${queueNumber}`;
+                            }
+                        } else if (data.status === 'завершен') {
+                            if (window.location.pathname !== "/") {
+                                window.location.href = "/";
+                            }
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching queue data:', error);
+                    window.location.href = "/";
+                });
+        }
+
+        setInterval(updateQueueStatusPeriodically, 3000);
+
+        // Notify button action
+        document.getElementById('btn-notify').addEventListener('click', function () {
+            window.location.href = 'https://t.me/Hamsterito_Bot';
+        });
+
+        // Leave button action
+        document.getElementById('btn-leave').addEventListener('click', function () {
+            document.getElementById('overlay').style.opacity = "1";
+            document.getElementById('overlay').style.display = "flex";
+        });
+
+        // Popup Confirm action
+        document.getElementById('popup-confirm').addEventListener('click', function () {
+            window.location.href = '/end?queue_number=' + queue_number;
+        });
+        
+        // Popup Cancel action
+        document.getElementById('popup-cancel').addEventListener('click', function () {
+            document.getElementById('overlay').style.display = 'none';
+        });
+    </script>
+</body>
+</html>

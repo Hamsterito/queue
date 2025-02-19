@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Вход в систему</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f9f9f9;
+            font-family: 'Gotham Pro', sans-serif;
+        }
+
+        .container {
+            position: relative;
+            width: 400px;
+            padding: 20px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .background-ellipse {
+            position: absolute;
+            width: 534px;
+            height: 534px;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            background: #D5EDFF;
+            filter: blur(50px);
+            z-index: -1;
+        }
+
+        .title {
+            font-family: 'Gotham Pro', sans-serif;
+            font-size: 24px;
+            color: #2F2F2F;
+            margin-bottom: 20px;
+        }
+
+        .input-field {
+            width: 100%;
+            height: 47.87px;
+            background: #EBEBEB;
+            border: 0.5px solid rgba(131, 131, 131, 0.717647);
+            border-radius: 5px;
+            margin-bottom: 15px;
+            padding: 10px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+
+        .button-container {
+            width: 100%;
+            height: 48.06px;
+            background: rgba(40, 147, 229, 1);
+            border-radius: 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            opacity: 0.46;
+            pointer-events: none;
+            transition: opacity 0.3s ease, background 0.3s ease;
+        }
+
+        .button-container.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .button-text {
+            font-family: 'Gotham Pro', sans-serif;
+            font-size: 16px;
+            color: #FFFFFF;
+        }
+
+        .hint-text {
+            margin-top: 15px;
+            font-family: 'Gotham Pro', sans-serif;
+            font-size: 15px;
+            color: #B7B7B7;
+        }
+        .error-message {
+            position: absolute;
+            bottom: 60px; /* смещение над кнопкой */
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            color: #D63535;
+            background-color: #fff;
+            border: 1px solid #D63535;
+            padding: 5px 10px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: none; /* скрыто по умолчанию */
+            z-index: 10;
+        }
+
+        .error-message.active {
+            display: block;
+        }
+
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="background-ellipse"></div>
+        <div class="title">Вход в систему</div>
+        <form id="login-form" action="/" method="POST">
+            <input type="text" id="admin-login" name="admin_login" class="input-field" placeholder="Введите логин" required>
+            <input type="password" id="admin-password" name="admin_password" class="input-field" placeholder="Введите пароль" required>
+
+            <button type="submit" id="submit-button" class="button-container">
+                <span class="button-text">Войти</span>
+            </button>
+        </form>
+        <div class="hint-text">Введите данные для входа</div>
+    </div>
+
+    <script>
+        const loginField = document.getElementById('admin-login');
+        const passwordField = document.getElementById('admin-password');
+        const submitButton = document.getElementById('submit-button');
+
+        function checkFields() {
+            if (loginField.value.trim() !== '' && passwordField.value.trim() !== '') {
+                submitButton.classList.add('active');
+            } else {
+                submitButton.classList.remove('active');
+            }
+        }
+
+        loginField.addEventListener('input', checkFields);
+        passwordField.addEventListener('input', checkFields);
+    </script>
+</body>
+</html>

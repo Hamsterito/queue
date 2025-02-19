@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/menu.css') }}">
+    <script src="{{ url_for('static', filename='js/menu.js') }}" defer></script>
+</head>
+<body>
+    <!-- меню -->
+    <header>
+        <div class="menu">
+            <img src="{{ url_for('static', filename='imaglogo/Aitulogo.svg') }}" alt="Логотип" class="logo">
+            <ul>
+                <li><a href="{{ url_for('statistics') }}">Статистика</a></li>
+                <li><a href="#" id="queue-button" onclick="redirectToTable()" disabled>Очередь</a></li>
+                {% if session['role'] == 'superadmin' %}
+                    <li id="editor-link"><a href="{{ url_for('admins') }}">Редактор</a></li>
+                {% endif %}
+                <li><a href="{{ url_for('logout') }}">Выйти</a></li>
+            </ul>
+            <div id="date-time">
+                <div id="current-time"></div>
+                <div id="current-date"></div>
+            </div>
+        </div>
+    </header>
+</body>
+</html>
+    <title>Регистрация нового администратора</title>
+</head>
+<body>
+    <h1>Регистрация нового администратора</h1>
+    
+    <form method="POST">
+        <label for="admin_login">Логин:</label>
+        <input type="text" id="admin_login" name="admin_login" required><br><br>
+        
+        <label for="admin_password">Пароль:</label>
+        <input type="password" id="admin_password" name="admin_password" required><br><br>
+
+        <label for="role">Роль:</label>
+        <select id="role" name="role">
+            <option value="admin">Администратор</option>
+            <option value="superadmin">Супер-администратор</option>
+        </select><br><br>
+        
+        <button type="submit">Зарегистрировать</button>
+    </form>
+</body>
+</html>

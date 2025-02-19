@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/menu.css') }}">
+    <script src="{{ url_for('static', filename='js/menu.js') }}" defer></script>
+</head>
+<body>
+    <!-- меню -->
+    <header>
+        <div class="menu">
+            <img src="{{ url_for('static', filename='imaglogo/Aitulogo.svg') }}" alt="Логотип" class="logo">
+            <ul>
+                <li><a href="{{ url_for('statistics') }}">Статистика</a></li>
+                <li><a href="#" id="queue-button" onclick="redirectToTable()" disabled>Очередь</a></li>
+                {% if session['role'] == 'superadmin' %}
+                    <li id="editor-link"><a href="{{ url_for('admins') }}">Редактор</a></li>
+                {% endif %}
+                <li><a href="{{ url_for('logout') }}">Выйти</a></li>
+            </ul>
+            <div id="date-time">
+                <div id="current-time"></div>
+                <div id="current-date"></div>
+            </div>
+        </div>
+    </header>
+</body>
+</html>
+    <title>Статистика по приемам клиентов</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h2>Статистика по приемам клиентов</h2>
+
+        <!-- Фильтры для выбора периода -->
+        <div class="btn-group" role="group" aria-label="Period filters">
+            <a href="{{ url_for('statistics', period='1_day') }}" class="btn btn-outline-primary">За 1 день</a>
+            <a href="{{ url_for('statistics', period='10_days') }}" class="btn btn-outline-primary">За 10 дней</a>
+            <a href="{{ url_for('statistics', period='1_month') }}" class="btn btn-outline-primary">За 30 дней</a>
+            <a href="{{ url_for('statistics', period='all_time') }}" class="btn btn-outline-primary">За все время</a>
+        </div>
+
+        <br><br>
+
+        <!-- Статистика самого супер админа -->
+        {% if session['role'] == 'superadmin' %}
+            <h3>Ваша статистика</h3>
+            <p><strong>Количество ваших клиентов:</strong> {{ total_clients }}</p>
+            <p><strong>Среднее время приема:</strong> {{ average_duration }}</p>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Имя клиента</th>
+                        <th>Время начала</th>
+                        <th>Время окончания</th>
+                        <th>Продолжительность</th>
+                        <th>Номер билета</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for record in personal_stats %}
+                        <tr>
+                            <td>{{ record[0] }}</td>
+                            <td>{{ record[1] }}</td>
+                            <td>{{ record[2] }}</td>
+                            <td>{{ record[3] }}</td>
+                            <td>{{ record[4] }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <br>
+
+        {% endif %}
+
+        <!-- Статистика по всем администраторам для супер админа -->
+        {% if session['role'] == 'superadmin' %}
+            <h3>Статистика по всем администраторам</h3>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Администратор</th>
+                        <th>Количество клиентов</th>
+                        <th>Среднее время приема</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for record in stats %}
+                        <tr>
+                            <td>{{ record[0] }}</td>
+                            <td>{{ record[1] }}</td>
+                            <td>{{ record[3] }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+
+        <!-- Статистика для обычного администратора -->
+        {% if session['role'] != 'superadmin' %}
+            <h3>Ваша статистика</h3>
+            <p><strong>Количество ваших клиентов:</strong> {{ total_clients }}</p>
+            <p><strong>Среднее время приема:</strong> {{ average_duration }}</p>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Имя клиента</th>
+                        <th>Время начала</th>
+                        <th>Время окончания</th>
+                        <th>Продолжительность</th>
+                        <th>Номер билета</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for record in stats %}
+                        <tr>
+                            <td>{{ record[0] }}</td>
+                            <td>{{ record[1] }}</td>
+                            <td>{{ record[2] }}</td>
+                            <td>{{ record[3] }}</td>
+                            <td>{{ record[4] }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <br>
+
+        {% endif %}
+
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

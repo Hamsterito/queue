@@ -55,6 +55,9 @@ The following instruction will show you how to get a Telegram bot token:
 
 
 Libraries
+
 pip install Flask
+
 pip install psycopg2
+
 pip install telebot

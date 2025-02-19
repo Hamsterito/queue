@@ -12,7 +12,7 @@ Two sites for admins(web version only) and users(mobile version only)
 
 -Database app.sql
 
---Launch Telegram bot
+Launch Telegram bot
 
 -Launch eletronic queue.py,telegram_bot_queue.py
 

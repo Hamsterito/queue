@@ -4,12 +4,12 @@ Website for online queue where admin can accept students, and where students can
 
 Two sites for admins(web version only) and users(mobile version only)
 Launching mobile and web versions
-1) Launch mobile _main_.py file
-2) Run web app.py file
-3)Database app.sql
+-Launch mobile _main_.py file
+- Run web app.py file
+-Database app.sql
 Launch Telegram bot
-1)Launch eletronic queue.py,telegram_bot_queue.py
-2)Enter the place token YOUR bot = telebot.TeleBot('YOUR KEY')
+-Launch eletronic queue.py,telegram_bot_queue.py
+-Enter the place token YOUR bot = telebot.TeleBot('YOUR KEY')
 
 How get token?
 Instructions for creating a bot token (BotFather)
